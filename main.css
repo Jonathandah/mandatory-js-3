@@ -1,3 +1,6 @@
+*{
+    margin: 0px;
+}
 body{
     display: flex;
     flex-direction: column;
@@ -29,6 +32,10 @@ ul{
 li{
     list-style: none;
     margin: 5px;
+}
+li:hover{
+    cursor: pointer;
+    color: rgb(4, 81, 158);
 }
 
 footer{
