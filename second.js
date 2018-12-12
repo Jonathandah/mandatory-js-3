@@ -21,8 +21,7 @@ function listRender(parsedData){ //renderar listan på alla rasar (inte subraser
         ul.appendChild(li);
         li.addEventListener("click", function(e){
             subBreedRender(e, parsedData);
-            selectedDog(e); //???????????????????????hjälp
-           // renderBreedimg(e);
+            selectedDog(e);
         });
     }
 }
@@ -36,7 +35,7 @@ function subBreedRender(e, parsedData){ //renderar endbart subreedsen när click
             for(let subBreed in dog){
                 let li = document.createElement("li");
                 li.textContent = breed + "-" + dog[subBreed]; //bättre sätt att rendera?
-                li.addEventListener("click", selectedDog); // selecteddog function?
+                li.addEventListener("click", selectedDog);
                 ul.appendChild(li);
             }
         }
@@ -60,7 +59,6 @@ function getReqImg(){ //hämtar randdom bild på hund
 getReqImg();
 
 function renderBreedimg(){ //funktion somm hämtar specifik hund
-     //funkar ednast ifall man klickar på hundrasen, inte om du klicakr på GET-knappen
     window.location.hash = "#" + dog; //fixa hash (hur får man hash att funka)
     console.log(dog);
     let req = new XMLHttpRequest
@@ -69,7 +67,7 @@ function renderBreedimg(){ //funktion somm hämtar specifik hund
     req.send();
 
     let button = document.querySelector("#reqButton");
-    button.removeEventListener("click", getReqImg); // funckare inte just nu; ställs inte om
+    button.removeEventListener("click", getReqImg);
     button.addEventListener("click", renderBreedimg);
 }
 
