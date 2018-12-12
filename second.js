@@ -1,4 +1,4 @@
-function getReq (){
+function getReq (){ //hämtar en request
     let req = new XMLHttpRequest
     req.open("GET", "https://dog.ceo/api/breeds/list/all");
     req.addEventListener("load", parse);
@@ -6,13 +6,13 @@ function getReq (){
 }
 getReq();
 
-function parse(){
+function parse(){ //parsar
     let parsed = JSON.parse(this.responseText);
     console.log(parsed);
-    render(parsed);
+    listRender(parsed);
 }
 
-function render(parsedData){
+function listRender(parsedData){ //renderar listan på alla rasar (inte subraser)
     let ul = document.querySelector("#dogBreedList");
     let breed;
     for(breed in parsedData.message){
@@ -20,14 +20,14 @@ function render(parsedData){
         li.textContent = breed;
         ul.appendChild(li);
         li.addEventListener("click", function(e){
-            renderBreed(e, parsedData);
-           // selectedDog(e, parsedData); //???????????????????????hjälp
-            renderBreedimg(e);
+            subBreedRender(e, parsedData);
+            selectedDog(e); //???????????????????????hjälp
+           // renderBreedimg(e);
         });
     }
 }
-
-function renderBreed(e, parsedData){
+ 
+function subBreedRender(e, parsedData){ //renderar endbart subreedsen när click eventet har körts
     for(let breed in parsedData.message){
         if (e.target.textContent === breed){
             let dog = parsedData.message[breed];
@@ -36,18 +36,19 @@ function renderBreed(e, parsedData){
             for(let subBreed in dog){
                 let li = document.createElement("li");
                 li.textContent = breed + "-" + dog[subBreed]; //bättre sätt att rendera?
-                li.addEventListener("click", renderBreedimg); // selecteddog function?
+                li.addEventListener("click", selectedDog); // selecteddog function?
                 ul.appendChild(li);
             }
         }
     }
 }
-
-function selectedDog (e, parsedData){
-
+let dog;
+function selectedDog (e){ 
+    dog = e.target.textContent;
+    renderBreedimg();
 }
 
-function getReqImg(){
+function getReqImg(){ //hämtar randdom bild på hund
     let req = new XMLHttpRequest
     req.open("GET", "https://dog.ceo/api/breeds/image/random");
     req.addEventListener("load", parseImg);
@@ -58,9 +59,9 @@ function getReqImg(){
 }
 getReqImg();
 
-function renderBreedimg(e){
-    let dog = e.target.textContent;
-    window.location.hash = "#" + dog;
+function renderBreedimg(){ //funktion somm hämtar specifik hund
+     //funkar ednast ifall man klickar på hundrasen, inte om du klicakr på GET-knappen
+    window.location.hash = "#" + dog; //fixa hash (hur får man hash att funka)
     console.log(dog);
     let req = new XMLHttpRequest
     req.open("GET", "https://dog.ceo/api/breed/"+ dog +"/images/random");
@@ -72,12 +73,15 @@ function renderBreedimg(e){
     button.addEventListener("click", renderBreedimg);
 }
 
-function parseImg(){
+
+function parseImg(){ //parse img funktion
     let imgDiv = document.querySelector("#imgDiv");
     imgDiv.innerHTML = "";
     let parsedImg = JSON.parse(this.responseText);
     let img = document.createElement("img");
-    console.log(parsedImg.message)
+
+    console.log(parsedImg.message);
+
     img.setAttribute("src", parsedImg.message);
     imgDiv.appendChild(img);
 
@@ -85,23 +89,22 @@ function parseImg(){
     displayImgBreed(text);
 }
 
-function displayImgBreed(breedUrl){
+function displayImgBreed(breedUrl){ //displayar breednamnet under bilden 
     let array = [];
-    array = breedUrl.split("/");
+    array = breedUrl.split("/"); //splittar url vid varje slash för att hitta namnet på breeden
 
     let breedPtag = document.querySelector("#breedPtag");
-    breedPtag.textContent = array[4];
+    breedPtag.textContent = array[4]; //breednamnet på index 4
 }
-
 
 //reset everything
 function returnTostart(){
     let ul = document.querySelector("#subBreedList");
     ul.innerHTML = ""
+            //hur tar man bort hash??
     let button = document.querySelector("#reqButton");
     button.removeEventListener("click", renderBreedimg);
     button.addEventListener("click", getReqImg);
-
     getReqImg();
 }
 let home = document.querySelector("#homeButton");
