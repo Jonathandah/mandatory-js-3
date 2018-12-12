@@ -18,18 +18,45 @@ header{
 
 main{
     display: flex;
-    flex-wrap: wrap;
     position: relative;
     width: 100%;
     height: 500px;
 }
-ul{
+#letfDiv{
+    display: flex;
+    position: relative;
+    width: 100%;
+    height: 500px;
+}
+#rightDiv{
+    width: 100%;
+    height: 500px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+img{
+    position: relative;
+    width: 100%;
+    height: 400px;
+}
+#subBreedList{
+    display: flex;
+    flex-direction: row;
+    width: 90%;
+    flex-wrap: wrap;
+}
+#dogBreedList{
     width: 700px;
+    height: 500px;
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
 }
 li{
+    position: relative;
     list-style: none;
     margin: 5px;
 }
@@ -37,9 +64,11 @@ li:hover{
     cursor: pointer;
     color: rgb(4, 81, 158);
 }
-
-footer{
-    width: 100%;
-    height: 150px;
-    background-color: rgb(4, 4, 112);
+.subBreed{
+    display: none;
 }
+button{
+    width: 100px;
+    height: 50px;
+}
+
