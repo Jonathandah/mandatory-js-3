@@ -1,3 +1,7 @@
+//=======================globala variablar======================
+let dog;
+//================================================================
+
 function getReq (){ //hämtar en request
     let req = new XMLHttpRequest
     req.open("GET", "https://dog.ceo/api/breeds/list/all");
@@ -23,33 +27,64 @@ function listRender(parsedData){ //renderar listan på alla rasar (inte subraser
             subBreedRender(e, parsedData);
             selectedDog(e);
         });
-    }
-}
- 
-function subBreedRender(e, parsedData){ //renderar endbart subreedsen när click eventet har körts
-    for(let breed in parsedData.message){
-        if (e.target.textContent === breed){
-            let dog = parsedData.message[breed];
+
+        if (window.location.hash === "#" + breed){ // har endast den if-satsen för att rendera ut sublistan när man refreshar sidan 
+            //(vet att den endast funkar sålänge hash inte är en subras, lyckades ej fixa det)
+            let currentBreed = parsedData.message[breed];
             let ul = document.querySelector("#subBreedList");
             ul.innerHTML = ""
-            for(let subBreed in dog){
+            for(let subBreed in currentBreed){
                 let li = document.createElement("li");
-                li.textContent = breed + "-" + dog[subBreed]; //bättre sätt att rendera?
+                li.textContent = currentBreed[subBreed] + "-" + breed;
                 li.addEventListener("click", selectedDog);
                 ul.appendChild(li);
             }
         }
     }
 }
-let dog;
+ 
+function subBreedRender(e, parsedData){ //renderar endbart subreedsen när click eventet har körts
+    for(let breed in parsedData.message){
+        if (e.target.textContent === breed){
+            let currentBreed = parsedData.message[breed];
+            let ul = document.querySelector("#subBreedList");
+            ul.innerHTML = ""
+            for(let subBreed in currentBreed){
+                let li = document.createElement("li");
+                li.textContent = currentBreed[subBreed] + "-" + breed;
+                li.addEventListener("click", selectedDog);
+                ul.appendChild(li);
+            }
+        }
+    }
+}
+
 function selectedDog (e){ 
     dog = e.target.textContent;
+    let array = dog.split("-");
+    if(array.length > 1){ //körs ifall arrayen innehåller en subras
+        dog = array[1] + "-" + array[0]; //reversar arrayen för att den ska funka med url:en
+        console.log(dog);
+    }
     renderBreedimg();
+}
+
+function checkUrl (){
+    let url; 
+    if(window.location.hash) { //ifall den är true säts rasen in i url:en
+        let formatted = window.location.hash.substring(1); //rasen
+        console.log(formatted);
+        url = "https://dog.ceo/api/breed/"+ formatted +"/images/random" 
+        console.log(window.location.hash);
+    } else { //annars blir den random
+        url = "https://dog.ceo/api/breeds/image/random";
+    }
+    return url;
 }
 
 function getReqImg(){ //hämtar randdom bild på hund
     let req = new XMLHttpRequest
-    req.open("GET", "https://dog.ceo/api/breeds/image/random");
+    req.open("GET", checkUrl());
     req.addEventListener("load", parseImg);
     req.send();
 
@@ -59,10 +94,9 @@ function getReqImg(){ //hämtar randdom bild på hund
 getReqImg();
 
 function renderBreedimg(){ //funktion somm hämtar specifik hund
-    window.location.hash = "#" + dog; //fixa hash (hur får man hash att funka)
-    console.log(dog);
+    window.location.hash = dog; //fixa hash (hur får man hash att funka)
     let req = new XMLHttpRequest
-    req.open("GET", "https://dog.ceo/api/breed/"+ dog +"/images/random");
+    req.open("GET", checkUrl());//"https://dog.ceo/api/breed/"+ dog +"/images/random");
     req.addEventListener("load", parseImg);
     req.send();
 
@@ -77,9 +111,6 @@ function parseImg(){ //parse img funktion
     imgDiv.innerHTML = "";
     let parsedImg = JSON.parse(this.responseText);
     let img = document.createElement("img");
-
-    console.log(parsedImg.message);
-
     img.setAttribute("src", parsedImg.message);
     imgDiv.appendChild(img);
 
@@ -99,7 +130,7 @@ function displayImgBreed(breedUrl){ //displayar breednamnet under bilden
 function returnTostart(){
     let ul = document.querySelector("#subBreedList");
     ul.innerHTML = ""
-            //hur tar man bort hash??
+    window.location.href = ""        //hur tar man bort hash??
     let button = document.querySelector("#reqButton");
     button.removeEventListener("click", renderBreedimg);
     button.addEventListener("click", getReqImg);
