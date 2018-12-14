@@ -29,7 +29,6 @@ function listRender(parsedData){ //renderar listan på alla rasar (inte subraser
         });
 
         if (window.location.hash === "#" + breed){ // har endast den if-satsen för att rendera ut sublistan när man refreshar sidan 
-            //(vet att den endast funkar sålänge hash inte är en subras, lyckades ej fixa det)
             let currentBreed = parsedData.message[breed];
             let ul = document.querySelector("#subBreedList");
             ul.innerHTML = ""
@@ -94,9 +93,9 @@ function getReqImg(){ //hämtar randdom bild på hund
 getReqImg();
 
 function renderBreedimg(){ //funktion somm hämtar specifik hund
-    window.location.hash = dog; //fixa hash (hur får man hash att funka)
+    window.location.hash = dog;
     let req = new XMLHttpRequest
-    req.open("GET", checkUrl());//"https://dog.ceo/api/breed/"+ dog +"/images/random");
+    req.open("GET", checkUrl());    //"https://dog.ceo/api/breed/"+ dog +"/images/random");
     req.addEventListener("load", parseImg);
     req.send();
 
@@ -126,11 +125,11 @@ function displayImgBreed(breedUrl){ //displayar breednamnet under bilden
     breedPtag.textContent = array[4]; //breednamnet på index 4
 }
 
-//reset everything
+//tar bort allt
 function returnTostart(){
     let ul = document.querySelector("#subBreedList");
     ul.innerHTML = ""
-    window.location.href = ""        //hur tar man bort hash??
+    window.location.href = ""       
     let button = document.querySelector("#reqButton");
     button.removeEventListener("click", renderBreedimg);
     button.addEventListener("click", getReqImg);
